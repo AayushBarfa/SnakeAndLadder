@@ -23,7 +23,7 @@ public class SnakeAndLadderService {
     }
 
     private Map<Integer,Integer> snakes=new HashMap<Integer,Integer>();
-    private Queue<Player> playersTurn=new LinkedList<>();
+    private Queue<Player> playersTurn=new LinkedList<Player>();
     private Map<Integer,Integer> ladders=new HashMap<Integer,Integer>();
 
 
@@ -39,23 +39,26 @@ public class SnakeAndLadderService {
             this.ladders.put(l.get(i).getA(),l.get(i).getB());
         }
     }
+    private List<Player> play = new ArrayList<Player>();
+    public void setPlay(){
 
+        this.play=database.getPlayers();
+    }
     public void setPlayersTurn() {
-        List<Player> play = new ArrayList<Player>();
-        play=database.getPlayers();
-        for(int i=0;i<play.size();i++){
-            this.playersTurn.add(play.get(i));
+
+        for(int i=0;i<this.play.size();i++){
+            this.playersTurn.add(this.play.get(i));
         }
 
     }
     public int checkSnakeLadder(int p){
         if(snakes.containsKey(p)){
             System.out.println("Are Biti Chod");
-            checkSnakeLadder(snakes.get(p));
+            return checkSnakeLadder(snakes.get(p));
         }
         if(ladders.containsKey(p)){
             System.out.println("Machod diye bhaiya ji aapto");
-            checkSnakeLadder(ladders.get(p));
+            return checkSnakeLadder(ladders.get(p));
         }
         return p;
     }
@@ -63,30 +66,35 @@ public class SnakeAndLadderService {
     public void playerMove(Player p,int diceValue){
         int temp=p.getPosition();
         if(temp+diceValue<=100){
-            int pos=checkSnakeLadder(temp);
-
+            int pos=checkSnakeLadder(temp+diceValue);
             p.setPosition(pos);
-
         }
     }
-
+    public void printMove(){
+        for(int i=0;i<this.play.size();i++){
+            System.out.println(play.get(i).getName()+" is at position:- "+ play.get(i).getPosition());
+        }
+        System.out.println("");
+    }
     public boolean check(Player p) {
         if (p.getPosition() == 100) return false;
         return true;
     }
 
     DiceRoll diceRoll = new DiceRoll();
-    void GameLogic() {
+    public void gameLogic() {
         while (check(playersTurn.peek())) {
             Player temp=playersTurn.remove();
             playersTurn.add(temp);
             Player chal=playersTurn.peek();
-            System.out.println("Turn of "+chal.getName());
-            String x=input.next();
+            System.out.println("Turn of "+chal.getName()+" Press enter to roll the Dice");
+            String x=input.nextLine();
             int diceValue=diceRoll.roll();
+            //System.out.println(diceValue+" "+ chal.getPosition());
             playerMove(chal,diceValue);
+            printMove();
         }
-        System.out.println("Congratualation to "+playersTurn.peek().getName()+"Chalo ghar ghar khelo");
+        System.out.println("Congratualation to "+playersTurn.peek().getName()+" Chalo ghar ghar khelo");
     }
 
 

@@ -2,6 +2,7 @@ package com.example.Snake.Ladder.Handler;
 import com.example.Snake.Ladder.Module.Ladder;
 import com.example.Snake.Ladder.Module.Player;
 import com.example.Snake.Ladder.Module.Snake;
+import com.example.Snake.Ladder.Service.SnakeAndLadderService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,17 @@ public class StartGame {
         for(int i=0;i<noOfLadders;i++){
             ladder.add(new Ladder(input.nextInt(),input.nextInt()));
         }
+        SnakeAndLadderService game=new SnakeAndLadderService();
 
+        game.setPlayers(players);
+        game.setSnakes(snakes);
+        game.setLadders(ladder);
+        game.setPlay();
+        game.set();
+        game.setPlayersTurn();
+
+
+        game.gameLogic();
 
     }
 }
